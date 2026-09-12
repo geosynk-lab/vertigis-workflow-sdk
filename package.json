@@ -1,20 +1,20 @@
 {
     "name": "@geosynk/vertigis-workflow-sdk",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Enterprise SDK for extending VertiGIS Studio Workflow",
     "publishConfig": {
         "access": "public"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/davekazemi/vertigis-workflow-sdk.git"
+        "url": "git+https://github.com/geosynk-lab/vertigis-workflow-sdk.git"
     },
     "author": "VertiGIS / Davood Kazemi (Geosynk)",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/davekazemi/vertigis-workflow-sdk/issues"
+        "url": "https://github.com/geosynk-lab/vertigis-workflow-sdk/issues"
     },
-    "homepage": "https://github.com/davekazemi/vertigis-workflow-sdk#readme",
+    "homepage": "https://github.com/geosynk-lab/vertigis-workflow-sdk#readme",
     "files": [
         "bin",
         "config",

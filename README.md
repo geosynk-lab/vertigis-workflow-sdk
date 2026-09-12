@@ -59,7 +59,7 @@ npx @geosynk/vertigis-workflow-sdk create my-activity-pack
 
 ### Option B: Direct from GitHub (Zero Registry / No NPM Publish Required)
 ```bash
-npx github:davekazemi/vertigis-workflow-sdk create my-activity-pack
+npx github:geosynk-lab/vertigis-workflow-sdk create my-activity-pack
 ```
 
 ### Option C: Local Linked SDK (Instant Local Development)
@@ -193,11 +193,11 @@ The build script outputs optimized files to `build/`:
 
 ### 5. AI Coding Assistant Skills (Antigravity, Cursor, Claude Code)
 
-This SDK integrates directly with the [VertiGIS SDK Skills repository](https://github.com/davekazemi/vertigis-sdk-skills).
+This SDK integrates directly with the [VertiGIS SDK Skills repository](https://github.com/geosynk-lab/vertigis-sdk-skills).
 
 During project creation, you will be prompted:
 ```text
-? Would you like to install AI coding assistant skills from https://github.com/davekazemi/vertigis-sdk-skills into this project? [Y/n]
+? Would you like to install AI coding assistant skills from https://github.com/geosynk-lab/vertigis-sdk-skills into this project? [Y/n]
 ```
 If accepted, the `vertigis-workflow-sdk-skill` is automatically installed into `./.agents/skills/` using the standard `skills` tool (`npx skills add`).
 
@@ -233,7 +233,7 @@ Or run the parent batch synchronizer:
 - [VertiGIS Studio Workflow Developer Center](https://developers.vertigisstudio.com/docs/workflow/sdk-web-overview/)
 - [Implement Custom Workflow Activities](https://developers.vertigisstudio.com/docs/workflow/sdk-web-create-activity)
 - [Implement Custom Form Elements](https://developers.vertigisstudio.com/docs/workflow/sdk-web-create-element)
-- [VertiGIS Workflow SDK Skill Reference Guide](https://github.com/davekazemi/vertigis-sdk-skills)
+- [VertiGIS Workflow SDK Skill Reference Guide](https://github.com/geosynk-lab/vertigis-sdk-skills)
 
 ---
 
