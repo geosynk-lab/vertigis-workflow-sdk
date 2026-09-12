@@ -1,5 +1,5 @@
 {
-    "name": "@davekazemi/vertigis-workflow-sdk",
+    "name": "@geosynk/vertigis-workflow-sdk",
     "version": "1.0.0",
     "description": "Enterprise SDK for extending VertiGIS Studio Workflow",
     "publishConfig": {
@@ -9,7 +9,7 @@
         "type": "git",
         "url": "git+https://github.com/davekazemi/vertigis-workflow-sdk.git"
     },
-    "author": "VertiGIS / Davood Kazemi",
+    "author": "VertiGIS / Davood Kazemi (GeoSynk)",
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/davekazemi/vertigis-workflow-sdk/issues"

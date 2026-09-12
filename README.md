@@ -1,10 +1,18 @@
+<p align="center">
+  <a href="https://geosynk.com.au/" target="_blank" rel="noopener noreferrer">
+    <img src="https://geosynk.com.au/images/logo/LOGO_MAIN1.svg" alt="GeoSynk" width="380" />
+  </a>
+</p>
+
 # VertiGIS Studio Workflow SDK (Enterprise Edition)
 
+[![Maintained by GeoSynk](https://img.shields.io/badge/maintained%20by-GeoSynk-f47c22.svg)](https://geosynk.com.au/)
+[![NPM Version](https://img.shields.io/npm/v/@geosynk/vertigis-workflow-sdk.svg?color=cb3837)](https://www.npmjs.com/package/@geosynk/vertigis-workflow-sdk)
 [![Upstream Sync](https://img.shields.io/badge/upstream-vertigis%2Fvertigis--workflow--sdk-blue.svg)](https://github.com/vertigis/vertigis-workflow-sdk)
 [![Enterprise Ready](https://img.shields.io/badge/architecture-enterprise--overlay-green.svg)](#enterprise-architectural-features)
 [![WCAG AA](https://img.shields.io/badge/accessibility-WCAG%20AA-success.svg)](#3-form-element-accessibility--touch-targets-wcag-aa)
 
-An enterprise-enhanced fork of the official [VertiGIS Studio Workflow SDK](https://vertigisstudio.com/products/vertigis-studio-workflow/). This repository bootstraps production-grade activity packs and custom form elements pre-configured with centralized design tokens, dynamic light/dark theming, WCAG AA compliant 44x44px touch targets, strict anti-god-component modularity, automated OpenSSL certificates, and AI assistant directives (`AGENTS.md`), while preserving 100% compatibility with official VertiGIS upstream updates.
+An enterprise-enhanced fork of the official [VertiGIS Studio Workflow SDK](https://vertigisstudio.com/products/vertigis-studio-workflow/), maintained and engineered by [GeoSynk](https://geosynk.com.au/) (Davood Kazemi). This repository bootstraps production-grade activity packs and custom form elements pre-configured with centralized design tokens, dynamic light/dark theming, WCAG AA compliant 44x44px touch targets, strict anti-god-component modularity, automated OpenSSL certificates, and AI assistant directives (`AGENTS.md`), while preserving 100% compatibility with official VertiGIS upstream updates.
 
 ---
 
@@ -46,7 +54,7 @@ Every project scaffolded from this repository includes:
 
 ### Option A: From NPM Registry (Recommended)
 ```bash
-npx @davekazemi/vertigis-workflow-sdk create my-activity-pack
+npx @geosynk/vertigis-workflow-sdk create my-activity-pack
 ```
 
 ### Option B: Direct from GitHub (Zero Registry / No NPM Publish Required)
@@ -137,3 +145,13 @@ Or run the parent batch synchronizer:
 
 - [VertiGIS Studio Workflow Developer Center](https://developers.vertigisstudio.com/docs/workflow/sdk-web-overview/)
 - [VertiGIS Workflow SDK Skill Reference Guide](https://github.com/davekazemi/vertigis-sdk-skills)
+
+---
+
+## About GeoSynk
+
+This project is curated and maintained by [GeoSynk](https://geosynk.com.au/), an Australian geospatial software consultancy founded by Davood Kazemi. GeoSynk specializes in enterprise GIS solutions, custom VertiGIS Studio integrations, Esri ArcGIS architecture, and automated cloud deployments.
+
+- **Website**: [https://geosynk.com.au](https://geosynk.com.au/)
+- **Contact**: [davood@geosynk.com.au](mailto:davood@geosynk.com.au)
+
