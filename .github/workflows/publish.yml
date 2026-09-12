@@ -11,12 +11,11 @@ on:
         default: 'latest'
 
 jobs:
-  publish:
+  publish-npm:
+    name: Publish to Public NPM (npmjs.com)
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      packages: write
-
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,9 +44,27 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish to GitHub Packages
-        continue-on-error: true
+  publish-github-packages:
+    name: Publish to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Align Scope for GitHub Packages
         run: |
           node -e "const fs = require('fs'); const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8')); pkg.name = '@geosynk-lab/' + pkg.name.split('/')[1]; fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));"
-          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
-          npm publish --registry https://npm.pkg.github.com/
+
+      - name: Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
