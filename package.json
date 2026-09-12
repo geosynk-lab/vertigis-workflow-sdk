@@ -18,6 +18,7 @@
         "lib",
         "scripts",
         "template",
+        "template-custom",
         "test"
     ],
     "type": "module",

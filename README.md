@@ -1,80 +1,134 @@
-# VertiGIS Studio Workflow SDK
+# VertiGIS Studio Workflow SDK (Enterprise Edition)
 
-![CI/CD](https://github.com/vertigis/vertigis-workflow-sdk/workflows/CI/CD/badge.svg)
-[![npm](https://img.shields.io/npm/v/@vertigis/workflow-sdk)](https://www.npmjs.com/package/@vertigis/workflow-sdk)
+[![Upstream Sync](https://img.shields.io/badge/upstream-vertigis%2Fvertigis--workflow--sdk-blue.svg)](https://github.com/vertigis/vertigis-workflow-sdk)
+[![Enterprise Ready](https://img.shields.io/badge/architecture-enterprise--overlay-green.svg)](#enterprise-architectural-features)
+[![WCAG AA](https://img.shields.io/badge/accessibility-WCAG%20AA-success.svg)](#3-form-element-accessibility--touch-targets-wcag-aa)
 
-This SDK makes it easy to create custom activity packs for [VertiGIS Studio Workflow](https://www.vertigisstudio.com/products/vertigis-studio-workflow/).
+An enterprise-enhanced fork of the official [VertiGIS Studio Workflow SDK](https://vertigisstudio.com/products/vertigis-studio-workflow/). This repository bootstraps production-grade activity packs and custom form elements pre-configured with centralized design tokens, dynamic light/dark theming, WCAG AA compliant 44x44px touch targets, strict anti-god-component modularity, automated OpenSSL certificates, and AI assistant directives (`AGENTS.md`), while preserving 100% compatibility with official VertiGIS upstream updates.
 
-## Requirements
+---
 
-- The latest LTS version of [Node.js](https://nodejs.org/en/download/)
-- A code editor of your choice. We recommend [Visual Studio Code](https://code.visualstudio.com/)
-- A viewer using VertiGIS Studio Workflow 5.31 or later ([VertiGIS Product Installer Downloads](https://apps.vertigisstudio.com/downloads))
-    - VertiGIS Studio Web 5.22 or later
-    - Workflow 5.31 widget for ArcGIS Experience Builder or later
+## Enterprise Architectural Features
 
-## Creating a new project
+Every project scaffolded from this repository includes:
 
-To create a project called _activity-pack_ run this command:
+1. **Centralized Design Token Subsystem (`src/tokens/`)**:
+   - `tokens/ui.ts`: 35+ semantic tokens with **100% safe fallbacks** (`var(--primaryBackground, #ffffff)`), guaranteeing visual resilience across VertiGIS Studio Web, Mobile, Desktop (ArcGIS Pro), and Workflow Server.
+   - `tokens/typography.ts`: Standardized font stack (`var(--defaultFont)`), font scale, and line heights.
+   - `tokens/index.ts`: Native CSS `color-mix(in srgb, ...)` utilities (`alphaMix` and `surfaceMix`) for dynamic, cross-theme tints, hover states, and muted borders without manual media queries.
 
-```sh
-npx @vertigis/workflow-sdk@latest create activity-pack
+2. **Dynamic Dual-Theme System (`src/hooks/useIsDarkTheme.ts`)**:
+   - Reactive React hook tracking active theme mode via MUI theme, OS `prefers-color-scheme`, and `MutationObserver` on `.vsw-app`/DOM.
+   - `src/utils/themeDetection.ts`: Standalone `isDarkTheme()` utility with ITU-R BT.709 perceived luminance calculation for non-CSS engines (canvas renderers, charts, and PDF exports).
+
+3. **Form Element Accessibility & Touch Targets (WCAG AA)**:
+   - Form element inputs, buttons, sliders, and interactive controls enforce a minimum touch target size of **44x44px** (`minWidth: "44px"`, `minHeight: "44px"`), meeting WCAG 2.5.5 / 2.5.8 standards.
+
+4. **Anti-God-Component Architecture (150–250 Line Ceilings)**:
+   - Sample form element (`src/elements/SampleFormElement/`) cleanly decomposed into presenter view (`main.tsx`), type contracts (`types/index.ts`), error boundary (`components/FormElementErrorBoundary.tsx`), and barrel export (`index.ts`).
+   - Sample custom activity (`src/activities/SampleActivity/main.ts`) demonstrating strongly typed inputs and outputs.
+   - Strict separation between Workflow execution state, presentation, and pure utilities.
+
+5. **Automated Development SSL Certificates (`certs/`)**:
+   - Zero-configuration HTTPS: automated OpenSSL certificate generation via `certs/generate-cert.sh` / `certs/generate-cert.bat`.
+   - Automatically executed on project creation or during first startup.
+
+6. **Cross-Platform Startup & Build Scripts**:
+   - `start.sh` / `start.bat`: Checks and kills stale port 5000 processes, verifies SSL certificates, and launches the development server.
+   - `build.sh` / `build.bat`: Compiles and validates production bundles into `build/`.
+
+7. **Coding Assistant Governance (`AGENTS.md`)**:
+   - Pre-injected VertiGIS Workflow SDK directives ensuring AI coding assistants (such as Antigravity, Claude Code, Cursor, Copilot) strictly follow typography rules, token usage, touch targets, and file size limits.
+
+---
+
+## Creating a New Project
+
+### Option A: Direct from GitHub (Any Machine)
+```bash
+npx github:davekazemi/vertigis-workflow-sdk create my-activity-pack
 ```
 
-This will bootstrap a new project in the specified directory to quickly get you up and running with the VertiGIS Studio Workflow SDK. Before you can use your activity pack in the [VertiGIS Studio Workflow Designer](https://apps.vertigisstudio.com/workflow/designer/), you will need to [register the activity pack](https://developers.vertigisstudio.com/docs/workflow/sdk-web-overview#register-the-activity-pack).
-
-## Available Scripts
-
-Inside the newly created project, you can run some built-in commands:
-
-### `npm run generate`
-
-Interactively generate a new activity or form element.
-
-### `npm start`
-
-Runs the project in development mode. By default, Your activity pack will be available at [https://localhost:5000/main.js](https://localhost:5000/main.js). The HTTPS certificate of the development server is a self-signed certificate that web browsers will warn about. To work around this open in a web browser and allow the invalid certificate as an exception. For creating a locally-trusted HTTPS certificate see the [Configuring a HTTPS Certificate](https://developers.vertigisstudio.com/docs/workflow/sdk-web-overview/#configuring-a-https-certificate) section on the [VertiGIS Studio Developer Center](https://developers.vertigisstudio.com/docs/workflow/overview/).
-
-#### Command Line Arguments
-
-The `start` script supports the following optional arguments that are passed along to [webpack-dev-server](https://github.com/webpack/webpack-dev-server/tree/main?tab=readme-ov-file).
-
-- `--allowed-hosts` - Default is `all`. [[docs](https://github.com/webpack/webpack-dev-server/blob/main/DOCUMENTATION-v4.md#devserverallowedhosts)]
-- `--host` - Default is `localhost`. [[docs](https://github.com/webpack/webpack-dev-server/blob/main/DOCUMENTATION-v4.md#devserverhost)]
-- `--port` - Default is `5000`. [[docs](https://github.com/webpack/webpack-dev-server/blob/main/DOCUMENTATION-v4.md#devserverport)]
-- `--type` - Server type. Default is `https`. [[docs](https://github.com/webpack/webpack-dev-server/blob/main/DOCUMENTATION-v4.md#devserverserver)]
-- `--key` - Provide a private key in PEM format. [[docs](https://developers.vertigisstudio.com/docs/workflow/sdk-web-overview/#configuring-a-https-certificate)]
-- `--cert` - Provide a certificate chain in PEM format. [[docs](https://developers.vertigisstudio.com/docs/workflow/sdk-web-overview/#configuring-a-https-certificate)]
-- `--ca` - Override the trusted CA certificates. [[docs](https://developers.vertigisstudio.com/docs/workflow/sdk-web-overview/#configuring-a-https-certificate)]
-
-NOTE: It is important to add `--` before the list of parameters.
-
-Example:
-
-```sh
-npm start -- --host 0.0.0.0 --allowed-hosts auto
+### Option B: Local Linked SDK (Instant Local Updates)
+Inside this repository:
+```bash
+npm link
+```
+Then anywhere on your machine:
+```bash
+vertigis-workflow-sdk create my-activity-pack
 ```
 
-### `npm run build`
+---
 
-Builds the activity pack for production to the `build` folder. It optimizes the build for the best performance.
+## Scaffolded Project Structure
 
-Your custom activity pack is now ready to be deployed!
-
-See the [section about deployment](https://developers.vertigisstudio.com/docs/workflow/sdk-web-overview/#deployment) in the [VertiGIS Studio Developer Center](https://developers.vertigisstudio.com/docs/workflow/overview/) for more information.
-
-## Upgrading
-
-To update a previously created project to the latest version of the Workflow SDK, navigate to the root directory of that project and run
-
-```sh
-npx @vertigis/workflow-sdk@latest upgrade
+```text
+my-activity-pack/
+├── .vscode/                     ← VS Code recommended extensions
+├── certs/                       ← Self-signed SSL certs for HTTPS devServer
+│   ├── cert.pem
+│   ├── key.pem
+│   └── generate-cert.sh / .bat
+├── src/
+│   ├── index.ts                 ← Library entry point registering activities & elements
+│   ├── main.ts                  ← Webpack bundle export entry
+│   ├── tokens/                  ← Centralized design tokens subsystem
+│   │   ├── ui.ts                ← Semantic color tokens with safe fallbacks
+│   │   ├── typography.ts        ← Font families, scales, and line heights
+│   │   └── index.ts             ← Barrel export + color-mix utilities
+│   ├── hooks/
+│   │   ├── useIsDarkTheme.ts    ← Reactive light/dark theme tracking
+│   │   └── index.ts
+│   ├── utils/
+│   │   ├── themeDetection.ts    ← Standalone luminance-based theme detector
+│   │   └── index.ts
+│   ├── activities/
+│   │   └── SampleActivity/      ← Custom workflow activity template
+│   │       ├── main.ts
+│   │       └── index.ts
+│   └── elements/
+│       └── SampleFormElement/   ← Decomposed form element template
+│           ├── main.tsx         ← React view with 44x44px touch targets
+│           ├── index.ts
+│           ├── types/           ← Form element props and state interfaces
+│           └── components/      ← Subcomponents & FormElementErrorBoundary
+├── AGENTS.md                    ← AI assistant development directives
+├── start.sh / start.bat         ← Port killer (5000) + SSL check + dev server runner
+├── build.sh / build.bat         ← Production compilation script
+├── package.json                 ← Includes @mui/material, @emotion/react, @emotion/styled
+└── webpack.config.js
 ```
+
+---
+
+## Available Scripts (in Scaffolded Project)
+
+- **`./start.sh` (or `start.bat`)**: Kills stale port 5000 processes, generates SSL certificates if missing, and runs `npm start`.
+- **`npm start`**: Runs the project in development mode with hot reloading on `https://localhost:5000/main.js`.
+- **`npm run build`** (or `./build.sh`): Generates an optimized production bundle in `build/`.
+- **`npm run cert:gen`**: Regenerates development SSL certificates in `certs/`.
+- **`npm run generate`**: Interactively generates a new activity or form element.
+
+---
+
+## Upstream Synchronization
+
+This fork tracks official updates from `https://github.com/vertigis/vertigis-workflow-sdk.git`. Because enterprise templates are maintained in the isolated `template-custom/` overlay directory, upstream merges execute cleanly without merge conflicts:
+
+```bash
+git fetch upstream
+git merge upstream/main --no-edit
+git push origin main
+```
+Or run the parent batch synchronizer:
+```bash
+./sync.sh
+```
+
+---
 
 ## Documentation
 
-Find [further documentation on the SDK](https://developers.vertigisstudio.com/docs/workflow/sdk-web-overview/) on the [VertiGIS Studio Developer Center](https://developers.vertigisstudio.com/docs/workflow/overview/).
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contributing guidelines.
+- [VertiGIS Studio Workflow Developer Center](https://developers.vertigisstudio.com/docs/workflow/sdk-web-overview/)
+- [VertiGIS Workflow SDK Skill Reference Guide](https://github.com/davekazemi/vertigis-sdk-skills)
