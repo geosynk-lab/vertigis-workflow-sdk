@@ -1,0 +1,45 @@
+name: Publish to NPM
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'NPM Tag (e.g. latest, beta)'
+        required: false
+        default: 'latest'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Verify Scaffolding & Build
+        run: |
+          mkdir -p /tmp/test-ci-publish
+          node bin/vertigis-workflow-sdk.js create /tmp/test-ci-publish/sample-pack --no-skills
+          cd /tmp/test-ci-publish/sample-pack
+          npm run build
+          test -f build/main.js
+          test -f build/activitypack.json
+
+      - name: Publish to NPM Registry
+        run: |
+          npm publish --access public --tag ${{ github.event.inputs.tag || 'latest' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

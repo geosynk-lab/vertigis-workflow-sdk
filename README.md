@@ -8,6 +8,7 @@
 
 [![Maintained by Geosynk](https://img.shields.io/badge/maintained%20by-Geosynk-f47c22.svg)](https://geosynk.com.au/)
 [![NPM Version](https://img.shields.io/npm/v/@geosynk/vertigis-workflow-sdk.svg?color=cb3837)](https://www.npmjs.com/package/@geosynk/vertigis-workflow-sdk)
+[![CI](https://github.com/geosynk-lab/vertigis-workflow-sdk/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/geosynk-lab/vertigis-workflow-sdk/actions/workflows/ci-cd.yml)
 [![Upstream Sync](https://img.shields.io/badge/upstream-vertigis%2Fvertigis--workflow--sdk-blue.svg)](https://github.com/vertigis/vertigis-workflow-sdk)
 [![Enterprise Ready](https://img.shields.io/badge/architecture-enterprise--overlay-green.svg)](#enterprise-architectural-features)
 [![WCAG AA](https://img.shields.io/badge/accessibility-WCAG%20AA-success.svg)](#3-form-element-accessibility--touch-targets-wcag-aa)
