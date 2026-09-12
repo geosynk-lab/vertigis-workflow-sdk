@@ -229,6 +229,6 @@ Or run the parent batch synchronizer:
 
 ### Connect with Geosynk
 - **Website**: [https://geosynk.com.au](https://geosynk.com.au/)
-- **Contact & Inquiries**: [davood@geosynk.com.au](mailto:davood@geosynk.com.au)
+- **Contact**: [Davood Kazemi](mailto:dave.kazemi@gmail.com)
 
 
