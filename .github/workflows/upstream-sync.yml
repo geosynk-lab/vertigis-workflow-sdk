@@ -1,0 +1,29 @@
+name: Upstream Sync
+
+on:
+  schedule:
+    - cron: '0 4 * * 1' # Runs weekly on Mondays at 04:00 UTC
+  workflow_dispatch:    # Allows manual 1-click trigger from GitHub UI
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Sync with Official VertiGIS Upstream
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git User
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Execute Enterprise Sync Script
+        run: |
+          chmod +x ./sync.sh
+          ./sync.sh

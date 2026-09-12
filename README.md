@@ -44,12 +44,17 @@ Every project scaffolded from this repository includes:
 
 ## Creating a New Project
 
-### Option A: Direct from GitHub (Any Machine)
+### Option A: From NPM Registry (Recommended)
+```bash
+npx @davekazemi/vertigis-workflow-sdk create my-activity-pack
+```
+
+### Option B: Direct from GitHub (Zero Registry / No NPM Publish Required)
 ```bash
 npx github:davekazemi/vertigis-workflow-sdk create my-activity-pack
 ```
 
-### Option B: Local Linked SDK (Instant Local Updates)
+### Option C: Local Linked SDK (Instant Local Development)
 Inside this repository:
 ```bash
 npm link
