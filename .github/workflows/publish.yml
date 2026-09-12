@@ -1,4 +1,4 @@
-name: Publish to NPM
+name: Publish to NPM & GitHub Packages
 
 on:
   release:
@@ -14,7 +14,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
+      packages: write
 
     steps:
       - name: Checkout repository
@@ -38,8 +39,15 @@ jobs:
           test -f build/main.js
           test -f build/activitypack.json
 
-      - name: Publish to NPM Registry
+      - name: Publish to Public NPM Registry
         run: |
           npm publish --access public --tag ${{ github.event.inputs.tag || 'latest' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to GitHub Packages
+        continue-on-error: true
+        run: |
+          node -e "const fs = require('fs'); const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8')); pkg.name = '@geosynk-lab/' + pkg.name.split('/')[1]; fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));"
+          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
+          npm publish --registry https://npm.pkg.github.com/
