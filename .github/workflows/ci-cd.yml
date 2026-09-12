@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI
 
 on:
     push:
@@ -10,50 +10,25 @@ on:
             - main
             - beta
 
-env:
-    CI: true
-
 jobs:
     test:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
 
-            - name: Use Node.js 24
+            - name: Use Node.js 22
               uses: actions/setup-node@v4
               with:
-                  node-version: 24.x
+                  node-version: 22.x
 
             - run: npm install
 
-            - run: npm run test
+            - name: Test Project Scaffolding & Build
+              run: |
+                  mkdir -p /tmp/test-ci-workflow
+                  node bin/vertigis-workflow-sdk.js create /tmp/test-ci-workflow/sample-pack --no-skills
+                  cd /tmp/test-ci-workflow/sample-pack
+                  npm run build
+                  test -f build/main.js
+                  test -f build/activitypack.json
 
-    release:
-        runs-on: ubuntu-latest
-        needs:
-            - test
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta'
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                  # Pulls all commits (needed for semantic release to correctly version)
-                  # See https://github.com/semantic-release/semantic-release/issues/1526
-                  fetch-depth: "0"
-                  persist-credentials: false
-
-            # Pulls all tags (needed for semantic release to correctly version)
-            - name: Fetch git tags
-              run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-
-            - name: Use Node.js 24
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 24.x
-
-            - run: npm install
-
-            - name: Release 🚀
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-              run: npx semantic-release@^23

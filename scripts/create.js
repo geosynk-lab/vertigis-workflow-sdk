@@ -96,6 +96,35 @@ if (fs.existsSync(customTemplateDir) && fs.existsSync(targetPath)) {
         }
     }
 
+    // 2.1 Ensure @vertigis/workflow-sdk resolves in node_modules even when installed as @geosynk/vertigis-workflow-sdk
+    const nodeModulesDir = path.join(targetPath, "node_modules");
+    const vertigisScope = path.join(nodeModulesDir, "@vertigis");
+    const vertigisSdk = path.join(vertigisScope, "workflow-sdk");
+    const geosynkSdk = path.join(nodeModulesDir, "@geosynk", "vertigis-workflow-sdk");
+
+    if (fs.existsSync(geosynkSdk) && !fs.existsSync(vertigisSdk)) {
+        try {
+            if (!fs.existsSync(vertigisScope)) {
+                fs.mkdirSync(vertigisScope, { recursive: true });
+            }
+            fs.symlinkSync(geosynkSdk, vertigisSdk, "junction");
+            console.log("[ENTERPRISE] Linked @vertigis/workflow-sdk -> @geosynk/vertigis-workflow-sdk");
+        } catch (e) {
+            console.warn("[WARN] Could not link @vertigis/workflow-sdk:", e);
+        }
+    } else if (fs.existsSync(vertigisSdk) && !fs.existsSync(geosynkSdk)) {
+        try {
+            const geosynkScope = path.join(nodeModulesDir, "@geosynk");
+            if (!fs.existsSync(geosynkScope)) {
+                fs.mkdirSync(geosynkScope, { recursive: true });
+            }
+            fs.symlinkSync(vertigisSdk, geosynkSdk, "junction");
+            console.log("[ENTERPRISE] Linked @geosynk/vertigis-workflow-sdk -> @vertigis/workflow-sdk");
+        } catch (e) {
+            console.warn("[WARN] Could not link @geosynk/vertigis-workflow-sdk:", e);
+        }
+    }
+
     // 3. Merge enterprise dependencies into package.json
     const pkgPath = path.join(targetPath, "package.json");
     if (fs.existsSync(pkgPath)) {
