@@ -9,7 +9,7 @@
         "type": "git",
         "url": "git+https://github.com/davekazemi/vertigis-workflow-sdk.git"
     },
-    "author": "VertiGIS / Dave Kazemi",
+    "author": "VertiGIS / Davood Kazemi",
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/davekazemi/vertigis-workflow-sdk/issues"
