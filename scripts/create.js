@@ -67,6 +67,21 @@ if (fs.existsSync(customTemplateDir) && fs.existsSync(targetPath)) {
         }
     }
 
+    // Ensure uuid.json exists alongside uuid.cjs for webpack metadata compiler compatibility
+    const uuidCjs = path.join(targetPath, "uuid.cjs");
+    const uuidJson = path.join(targetPath, "uuid.json");
+    if (fs.existsSync(uuidCjs) && !fs.existsSync(uuidJson)) {
+        try {
+            const cjsContent = fs.readFileSync(uuidCjs, "utf-8");
+            const match = cjsContent.match(/const uuid = ["']([^"']+)["']/);
+            if (match && match[1]) {
+                fs.writeFileSync(uuidJson, JSON.stringify(match[1]) + "\n", "utf-8");
+            }
+        } catch {
+            // Ignore uuid copy failure
+        }
+    }
+
     // 3. Merge enterprise dependencies into package.json
     const pkgPath = path.join(targetPath, "package.json");
     if (fs.existsSync(pkgPath)) {
