@@ -50,6 +50,23 @@ if (fs.existsSync(customTemplateDir) && fs.existsSync(targetPath)) {
         }
     }
 
+    // Configure build scripts with user-selected project name
+    const projectName = path.basename(targetPath);
+    const buildScripts = [
+        path.join(targetPath, "build.sh"),
+        path.join(targetPath, "build.bat"),
+    ];
+    for (const bs of buildScripts) {
+        if (fs.existsSync(bs)) {
+            try {
+                const scriptContent = fs.readFileSync(bs, "utf-8");
+                fs.writeFileSync(bs, scriptContent.replace(/__PROJECT_NAME__/g, projectName), "utf-8");
+            } catch {
+                // Ignore replacement failure
+            }
+        }
+    }
+
     // 3. Merge enterprise dependencies into package.json
     const pkgPath = path.join(targetPath, "package.json");
     if (fs.existsSync(pkgPath)) {

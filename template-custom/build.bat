@@ -1,8 +1,11 @@
 @echo off
-echo Building production activity pack (npm run build)...
-call npm run build
-if %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] Build failed with exit code %ERRORLEVEL%.
-    exit /b %ERRORLEVEL%
+set "NAME=%~1"
+if "%NAME%"=="" set "NAME=__PROJECT_NAME__"
+call npm run build || exit /b 1
+if not exist build\main.js (
+    echo Error: build\main.js not found!
+    exit /b 1
 )
-echo [SUCCESS] Activity pack output located in dist/
+copy /y build\main.js "build\%NAME%.js" >nul
+copy /y build\main.js "build\%NAME%.js.txt" >nul
+echo Created build\%NAME%.js and build\%NAME%.js.txt
