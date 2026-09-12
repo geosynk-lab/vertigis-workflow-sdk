@@ -1,6 +1,6 @@
 {
     "name": "@geosynk/vertigis-workflow-sdk",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Enterprise SDK for extending VertiGIS Studio Workflow",
     "publishConfig": {
         "access": "public"

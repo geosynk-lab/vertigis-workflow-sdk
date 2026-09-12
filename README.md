@@ -191,6 +191,27 @@ The build script outputs optimized files to `build/`:
 
 ---
 
+### 5. AI Coding Assistant Skills (Antigravity, Cursor, Claude Code)
+
+This SDK integrates directly with the [VertiGIS SDK Skills repository](https://github.com/davekazemi/vertigis-sdk-skills).
+
+During project creation, you will be prompted:
+```text
+? Would you like to install AI coding assistant skills from https://github.com/davekazemi/vertigis-sdk-skills into this project? [Y/n]
+```
+If accepted, the `vertigis-workflow-sdk-skill` is automatically installed into `./.agents/skills/` using the standard `skills` tool (`npx skills add`).
+
+You can install or update the skill at any time in your project:
+```bash
+npm run skill:add
+```
+Or via non-interactive flag during scaffolding:
+```bash
+npx @geosynk/vertigis-workflow-sdk create my-pack --skills
+```
+
+---
+
 ## Upstream Synchronization
 
 This fork tracks official updates from `https://github.com/vertigis/vertigis-workflow-sdk.git`. Because enterprise templates are maintained in the isolated `template-custom/` overlay directory, upstream merges execute cleanly without merge conflicts:
