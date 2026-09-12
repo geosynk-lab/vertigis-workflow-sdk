@@ -125,6 +125,72 @@ my-activity-pack/
 
 ---
 
+## Developer Guide: Building & Deploying Activity Packs
+
+> Official Reference: [VertiGIS Studio Workflow TypeScript SDK Overview](https://developers.vertigisstudio.com/docs/workflow/sdk-web-overview)
+
+### 1. Architecture & Pack Lifecycle
+The Workflow SDK compiles your custom activities and form elements into a client-side bundle and metadata manifest:
+- **`src/index.ts`**: The central registry file exporting all custom activities and form elements.
+- **`uuid.js`**: Holds an auto-generated unique GUID ensuring multiple activity packs run side-by-side in the same workflow engine without namespace collisions. *(Do not modify this value).*
+- **`build/activitypack.json`**: The manifest describing activity inputs, outputs, element props, and bundle entry points required by VertiGIS Studio Workflow Designer.
+
+### 2. Generating Activities & Form Elements
+Scaffold new components using the interactive generator:
+```bash
+npm run generate
+```
+Follow the interactive CLI prompts:
+- **Activity**: Creates a new business logic activity under `src/activities/<Name>/main.ts` with strongly typed inputs/outputs and registers it in `src/index.ts`.
+- **Form Element**: Creates a custom React form component under `src/elements/<Name>/` with 44x44px touch targets, error boundary, and register it in `src/index.ts`.
+
+### 3. Running the Development Server
+Launch the local HTTPS development server with automatic certificate validation:
+```bash
+./start.sh      # Linux / macOS
+start.bat       # Windows
+# or: npm start
+```
+- Development endpoint: `https://localhost:5000/main.js` (and `https://localtest.me:5000/main.js`)
+- Activity pack manifest: `https://localhost:5000/activitypack.json`
+- Supports Cross-Origin Resource Sharing (CORS) from any origin out-of-the-box.
+
+### 4. Registering the Activity Pack in ArcGIS Online / Portal
+To make your custom activities visible to workflow authors inside **VertiGIS Studio Workflow Designer**:
+1. Log in to **ArcGIS Online** or **Portal for ArcGIS**.
+2. Navigate to **My Content** > **Add Item** > **An application**.
+3. Fill in the item properties:
+   - **Type**: `Web Mapping`
+   - **Purpose**: `Ready To Use`
+   - **API**: `JavaScript`
+   - **URL**: `https://localhost:5000/activitypack.json` *(for local development)* or your production HTTPS manifest URL.
+   - **Title**: e.g., *Custom Utility Workflow Pack*
+   - **Tags**: Must include **`geocortex-workflow-activity-pack`** *(Mandatory: Designer will not discover the pack without this exact tag).*
+4. Click **Save**.
+
+### 5. Production Build & Web Server Hosting
+Compile production artifacts:
+```bash
+./build.sh      # Linux / macOS
+build.bat       # Windows
+# or: npm run build
+```
+The build script outputs optimized files to `build/`:
+- `build/main.js` & `build/<project-name>.js`: Minified production bundle
+- `build/<project-name>.js.txt`: Script text artifact for hosting in environments requiring `.txt` extensions
+- `build/activitypack.json`: Production activity pack manifest
+
+**Web Server Hosting Requirements**:
+- Must be hosted over **HTTPS** with a valid SSL certificate.
+- Must enable **CORS** headers allowing requests from `https://apps.vertigisstudio.com` (or your on-premises VertiGIS portal domain).
+- Update your ArcGIS Portal item URL from `https://localhost:5000/...` to your production URL `https://your-server.com/path/activitypack.json`.
+
+### 6. Sharing with Workflow Authors
+- Share the registered ArcGIS Item with the target groups or users in your organization who author workflows in Designer.
+- *(Note: End users of the application running workflows do not require direct permissions to the Portal item; only workflow authors require access).*
+
+---
+
 ## Upstream Synchronization
 
 This fork tracks official updates from `https://github.com/vertigis/vertigis-workflow-sdk.git`. Because enterprise templates are maintained in the isolated `template-custom/` overlay directory, upstream merges execute cleanly without merge conflicts:
@@ -144,14 +210,25 @@ Or run the parent batch synchronizer:
 ## Documentation
 
 - [VertiGIS Studio Workflow Developer Center](https://developers.vertigisstudio.com/docs/workflow/sdk-web-overview/)
+- [Implement Custom Workflow Activities](https://developers.vertigisstudio.com/docs/workflow/sdk-web-create-activity)
+- [Implement Custom Form Elements](https://developers.vertigisstudio.com/docs/workflow/sdk-web-create-element)
 - [VertiGIS Workflow SDK Skill Reference Guide](https://github.com/davekazemi/vertigis-sdk-skills)
 
 ---
 
 ## About Geosynk
 
-This project is curated and maintained by [Geosynk](https://geosynk.com.au/), an Australian geospatial software consultancy founded by Davood Kazemi. Geosynk specializes in enterprise GIS solutions, custom VertiGIS Studio integrations, Esri ArcGIS architecture, and automated cloud deployments.
+[Geosynk](https://geosynk.com.au/) is an Australian geospatial engineering and software consultancy founded by Davood Kazemi, delivering enterprise GIS architecture, custom VertiGIS solutions, and modern web applications.
 
+### Core Capabilities & Topics
+
+- **VertiGIS Studio Engineering**: Turnkey Web SDK components, custom Workflow activities, accessible form elements, report templates, and automated printing services.
+- **Esri ArcGIS Enterprise**: End-to-end cloud and on-premises architecture, Enterprise Geodatabase design, Utility Network migrations, and ArcGIS Experience Builder extensions.
+- **Full-Stack Spatial Systems**: High-performance React, TypeScript, Node.js, WebGL, and Leaflet/Mapbox interactive web applications.
+- **Spatial DevOps & Automation**: Automated CI/CD pipelines, automated testing, containerized GIS deployments, and infrastructure as code across AWS and Microsoft Azure.
+
+### Connect with Geosynk
 - **Website**: [https://geosynk.com.au](https://geosynk.com.au/)
-- **Contact**: [davood@geosynk.com.au](mailto:davood@geosynk.com.au)
+- **Contact & Inquiries**: [davood@geosynk.com.au](mailto:davood@geosynk.com.au)
+
 
