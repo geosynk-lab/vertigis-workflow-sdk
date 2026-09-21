@@ -1,3 +1,5 @@
+nodeLinker: hoisted
+
 allowBuilds:
   "@mui/x-telemetry": false
   "@vaadin/vaadin-usage-statistics": false
