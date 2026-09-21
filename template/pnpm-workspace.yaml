@@ -1,0 +1,5 @@
+allowBuilds:
+  "@mui/x-telemetry": false
+  "@vaadin/vaadin-usage-statistics": false
+  playwright-chromium: true
+  unrs-resolver: true
