@@ -14,30 +14,100 @@ const dirName = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.join(dirName, "..");
 
 // Target directory name.
+// Target directory name and CLI options.
 const cliArgs = process.argv.slice(2);
-const createIdx = cliArgs.indexOf("create");
-const directoryName = createIdx !== -1 ? cliArgs[createIdx + 1] : cliArgs[0];
+const skipInstall = cliArgs.includes("--skip-install") || cliArgs.includes("--no-install");
+const usePnpm = cliArgs.includes("--pnpm") || cliArgs.includes("--pm=pnpm");
+const nonFlagArgs = cliArgs.filter(arg => !arg.startsWith("-") && arg !== "create");
+const directoryName = nonFlagArgs[0];
 
 if (!directoryName) {
-    console.error("Please specify the project directory name: vertigis-workflow-sdk create <project-name>");
+    console.error(
+        "Please specify the project directory name: vertigis-workflow-sdk create <project-name> [--skip-install] [--pnpm]"
+    );
     process.exit(1);
 }
 
 const targetPath = path.resolve(directoryName);
 
-// 1. Run standard VertiGIS base scaffolding
-const rootPkgPath = path.join(rootDir, "package.json");
-const originalRootPkg = fs.readFileSync(rootPkgPath, "utf-8");
-try {
-    // Upstream sdkCreate expects @vertigis/workflow-sdk on npm to match selfVersion.
-    // Setting version to "latest" prevents notarget 404 errors during npm install.
-    const rootPkg = JSON.parse(originalRootPkg);
-    rootPkg.version = "latest";
-    fs.writeFileSync(rootPkgPath, JSON.stringify(rootPkg, null, 2), "utf-8");
+// 1. Run base scaffolding
+if (skipInstall || usePnpm) {
+    if (!/^[\w-]+$/.test(path.basename(targetPath))) {
+        console.error(
+            `Cannot create new project at ${targetPath} as the directory name is not valid. Letters, numbers, dashes and underscores are allowed.\n`
+        );
+        process.exit(1);
+    }
+    if (/[!]/.test(targetPath)) {
+        console.error(
+            `Cannot create new project at ${targetPath} as the path is not valid. Exclamation points (!) are not allowed in the file system path.\n`
+        );
+        process.exit(1);
+    }
+    if (fs.existsSync(targetPath) && fs.readdirSync(targetPath).length > 0) {
+        console.error(`Cannot create new project at ${targetPath} as it already exists.\n`);
+        process.exit(1);
+    }
 
-    sdkCreate(rootDir, directoryName, "workflow");
-} finally {
-    fs.writeFileSync(rootPkgPath, originalRootPkg, "utf-8");
+    console.log(`Creating new project at ${targetPath}`);
+    fs.cpSync(path.join(rootDir, "template"), targetPath, { recursive: true });
+
+    const tsconfigTpl = path.join(rootDir, "config/tsconfig.json.template");
+    if (fs.existsSync(tsconfigTpl)) {
+        fs.copyFileSync(tsconfigTpl, path.join(targetPath, "tsconfig.json"));
+    }
+    const eslintTpl = path.join(rootDir, "config/eslint.config.js.template");
+    if (fs.existsSync(eslintTpl)) {
+        fs.copyFileSync(eslintTpl, path.join(targetPath, "eslint.config.js"));
+    }
+    const gitignorePath = path.join(targetPath, "gitignore");
+    if (fs.existsSync(gitignorePath)) {
+        fs.renameSync(gitignorePath, path.join(targetPath, ".gitignore"));
+    }
+
+    // Set project name and base devDependencies in package.json
+    const initialPkgPath = path.join(targetPath, "package.json");
+    if (fs.existsSync(initialPkgPath)) {
+        const pkg = JSON.parse(fs.readFileSync(initialPkgPath, "utf-8"));
+        pkg.name = path.basename(targetPath);
+        pkg.devDependencies = pkg.devDependencies || {};
+        pkg.devDependencies["@vertigis/workflow-sdk"] = "latest";
+        pkg.devDependencies["@vertigis/workflow"] = "^5.51.0";
+        fs.writeFileSync(initialPkgPath, JSON.stringify(pkg, null, 4) + "\n", "utf-8");
+    }
+
+    // Generate random UUID for uuid.cjs
+    const cryptoMod = await import("node:crypto");
+    const uuid = cryptoMod.randomUUID();
+    const uuidCjs = path.join(targetPath, "uuid.cjs");
+    if (fs.existsSync(uuidCjs)) {
+        try {
+            const cjsContent = fs.readFileSync(uuidCjs, "utf-8");
+            fs.writeFileSync(uuidCjs, cjsContent.replace(/<uuid>/g, uuid), "utf-8");
+        } catch {
+            // Ignore replacement failure
+        }
+    }
+
+    try {
+        execSync("git init -b main", { cwd: targetPath, stdio: "ignore" });
+    } catch {
+        // Ignore git init errors
+    }
+} else {
+    const rootPkgPath = path.join(rootDir, "package.json");
+    const originalRootPkg = fs.readFileSync(rootPkgPath, "utf-8");
+    try {
+        // Upstream sdkCreate expects @vertigis/workflow-sdk on npm to match selfVersion.
+        // Setting version to "latest" prevents notarget 404 errors during npm install.
+        const rootPkg = JSON.parse(originalRootPkg);
+        rootPkg.version = "latest";
+        fs.writeFileSync(rootPkgPath, JSON.stringify(rootPkg, null, 2), "utf-8");
+
+        sdkCreate(rootDir, directoryName, "workflow");
+    } finally {
+        fs.writeFileSync(rootPkgPath, originalRootPkg, "utf-8");
+    }
 }
 
 // 2. Apply Enterprise Template Custom Overlay
@@ -66,10 +136,7 @@ if (fs.existsSync(customTemplateDir) && fs.existsSync(targetPath)) {
 
     // Configure build scripts with user-selected project name
     const projectName = path.basename(targetPath);
-    const buildScripts = [
-        path.join(targetPath, "build.sh"),
-        path.join(targetPath, "build.bat"),
-    ];
+    const buildScripts = [path.join(targetPath, "build.sh"), path.join(targetPath, "build.bat")];
     for (const bs of buildScripts) {
         if (fs.existsSync(bs)) {
             try {
@@ -137,18 +204,25 @@ if (fs.existsSync(customTemplateDir) && fs.existsSync(targetPath)) {
 
             pkg.scripts = pkg.scripts || {};
             pkg.scripts["cert:gen"] = "bash ./certs/generate-cert.sh";
-            pkg.scripts["skill:add"] = "npx --yes skills add geosynk-lab/vertigis-sdk-skills --skill vertigis-workflow-sdk-skill -y";
+            pkg.scripts["skill:add"] =
+                "npx --yes skills add geosynk-lab/vertigis-sdk-skills --skill vertigis-workflow-sdk-skill -y";
             pkg.scripts["skills:add"] = "npx --yes skills add geosynk-lab/vertigis-sdk-skills -y";
 
             fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 4) + "\n", "utf-8");
-            console.log("[ENTERPRISE] Added enterprise dependencies (@mui/material, @emotion/*) and skill:add scripts to package.json");
+            console.log(
+                "[ENTERPRISE] Added enterprise dependencies (@mui/material, @emotion/*) and skill:add scripts to package.json"
+            );
         } catch (e) {
             console.warn("[WARN] Failed to merge enterprise package.json dependencies:", e);
         }
     }
 
     // 4. Auto-generate development SSL certificate if openssl is available
-    const certScript = path.join(targetPath, "certs", process.platform === "win32" ? "generate-cert.bat" : "generate-cert.sh");
+    const certScript = path.join(
+        targetPath,
+        "certs",
+        process.platform === "win32" ? "generate-cert.bat" : "generate-cert.sh"
+    );
     if (fs.existsSync(certScript)) {
         try {
             console.log("[ENTERPRISE] Checking development SSL certificate...");
@@ -211,5 +285,20 @@ if (fs.existsSync(customTemplateDir) && fs.existsSync(targetPath)) {
     console.log("  - AI Assistant Skill:        npm run skill:add (install/update from vertigis-sdk-skills)");
     console.log("  - Development Scripts:       start.sh / start.bat, build.sh / build.bat");
     console.log("  - AI Directives:             AGENTS.md pre-configured for coding assistants");
+
+    if (usePnpm && !skipInstall) {
+        console.log("\n[PNPM] Installing packages with pnpm...");
+        try {
+            execSync("pnpm install", { cwd: targetPath, stdio: "inherit" });
+        } catch (e) {
+            console.warn("[WARN] pnpm install encountered an issue:", e.message);
+        }
+    }
+
+    if (skipInstall) {
+        console.log("  - [INFO] Package installation was skipped (--skip-install).");
+        console.log("    Run 'npm install' or 'pnpm install' at your workspace root to install dependencies.\n");
+    }
+
     console.log("================================================================================");
 }

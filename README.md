@@ -49,6 +49,10 @@ Every project scaffolded from this repository includes:
 7. **Coding Assistant Governance (`AGENTS.md`)**:
    - Pre-injected VertiGIS Workflow SDK directives ensuring AI coding assistants (such as Antigravity, Claude Code, Cursor, Copilot) strictly follow typography rules, token usage, touch targets, and file size limits.
 
+8. **Monorepo & Dual Package Manager Resilience (`npm` & `pnpm`)**:
+   - **Monorepo `--skip-install` Support**: Scaffolds full enterprise activities and form elements without generating duplicate nested `node_modules`.
+   - **Native `pnpm` Support**: Easily scaffold and manage projects using `pnpm`.
+
 ---
 
 ## Creating a New Project
@@ -71,6 +75,23 @@ npm link
 Then anywhere on your machine:
 ```bash
 vertigis-workflow-sdk create my-activity-pack
+```
+
+### Option D: Inside a Monorepo / Workspaces (Single Shared `node_modules`)
+To manage multiple workflow packs under a single `node_modules` at your workspace root:
+```bash
+# 1. Scaffold without installing duplicate dependencies
+npx @geosynk/vertigis-workflow-sdk create my-activity-pack --skip-install
+
+# 2. Run install once at your monorepo root
+npm install
+# or
+pnpm install
+```
+
+### Option E: Direct with `pnpm`
+```bash
+npx @geosynk/vertigis-workflow-sdk create my-activity-pack --pnpm
 ```
 
 ---
