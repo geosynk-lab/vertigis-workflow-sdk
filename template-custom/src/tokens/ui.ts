@@ -50,7 +50,9 @@ export const UI_TOKENS = {
     shape: {
         borderRadius: "var(--borderRadius, 4px)",
         borderRadiusSm: "var(--borderRadiusSm, 2px)",
+        borderRadiusLarge: "var(--borderRadiusLarge, 8px)",
         borderRadiusLg: "var(--borderRadiusLg, 8px)",
+        borderRadiusRound: "50%",
         borderRadiusPill: "9999px",
         shadowPrimary: "var(--shadowPrimary, 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24))",
         shadowElevated: "var(--shadowElevated, 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23))",
