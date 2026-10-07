@@ -3,10 +3,6 @@
  */
 
 export const TYPOGRAPHY_TOKENS = {
-    fontFamily: {
-        primary: "var(--defaultFont, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif)",
-        mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-    },
     fontSize: {
         h6: "1.25rem",
         subtitle1: "1rem",

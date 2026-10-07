@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Box, Typography, Button } from "@mui/material";
-import { tokens } from "../../../tokens";
+import { Alert, AlertTitle, Button } from "@mui/material";
 
 interface Props {
     children: React.ReactNode;
@@ -32,24 +31,17 @@ export class FormElementErrorBoundary extends React.Component<Props, State> {
     render(): React.ReactNode {
         if (this.state.hasError) {
             return (
-                <Box
-                    sx={{
-                        p: 2,
-                        backgroundColor: tokens.ui.status.errorBg,
-                        border: `1px solid ${tokens.ui.status.errorBorder}`,
-                        borderRadius: tokens.ui.shape.borderRadius,
-                    }}
+                <Alert
+                    severity="error"
+                    action={
+                        <Button size="small" color="inherit" onClick={this.handleRetry}>
+                            Retry Element
+                        </Button>
+                    }
                 >
-                    <Typography variant="subtitle2" sx={{ color: tokens.ui.status.errorFg, fontWeight: "bold" }}>
-                        Form Element Error
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: tokens.ui.text.primary, display: "block", my: 1 }}>
-                        {this.state.errorMessage}
-                    </Typography>
-                    <Button size="small" variant="outlined" onClick={this.handleRetry}>
-                        Retry Element
-                    </Button>
-                </Box>
+                    <AlertTitle>Form Element Error</AlertTitle>
+                    {this.state.errorMessage}
+                </Alert>
             );
         }
         return this.props.children;

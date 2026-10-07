@@ -158,7 +158,7 @@ if (fs.existsSync(pkgPath)) {
         pkg.name = path.basename(targetPath);
 
         pkg.dependencies = pkg.dependencies || {};
-        pkg.dependencies["@mui/material"] = "^5.15.0";
+        pkg.dependencies["@mui/material"] = "^7.3.0";
         pkg.dependencies["@emotion/react"] = "^11.11.0";
         pkg.dependencies["@emotion/styled"] = "^11.11.0";
 
@@ -168,6 +168,7 @@ if (fs.existsSync(pkgPath)) {
 
         pkg.scripts = pkg.scripts || {};
         pkg.scripts["cert:gen"] = "bash ./certs/generate-cert.sh";
+        pkg.scripts["verify:styles"] = "python3 scripts/verify_zero_cosmetic_sx.py";
         pkg.scripts["skill:add"] =
             "npx --yes skills add geosynk-lab/vertigis-sdk-skills --skill vertigis-workflow-sdk-skill -y";
         pkg.scripts["skills:add"] = "npx --yes skills add geosynk-lab/vertigis-sdk-skills -y";
