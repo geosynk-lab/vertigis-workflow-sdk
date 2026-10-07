@@ -36,6 +36,14 @@ export function createVertiGisTheme(isDark: boolean): Theme {
                     outlined: { borderColor: UI_TOKENS.border.primary, borderRadius: UI_TOKENS.shape.borderRadius },
                 },
             },
+            MuiFormControlLabel: {
+                styleOverrides: {
+                    root: {
+                        marginLeft: 0,
+                        marginRight: 0,
+                    },
+                },
+            },
         },
     });
 }

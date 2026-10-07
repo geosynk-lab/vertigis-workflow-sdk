@@ -1,8 +1,10 @@
 import { UI_TOKENS } from "./ui";
 import { TYPOGRAPHY_TOKENS } from "./typography";
+import { SPACING } from "./spacing";
 
 export { UI_TOKENS } from "./ui";
 export { TYPOGRAPHY_TOKENS } from "./typography";
+export { SPACING } from "./spacing";
 
 export function alphaMix(token: string, opacityPercent: number): string {
     const clamped = Math.max(0, Math.min(100, opacityPercent));
@@ -17,6 +19,7 @@ export function surfaceMix(fgToken: string, bgToken: string, weightPercent: numb
 export const tokens = {
     ui: UI_TOKENS,
     typography: TYPOGRAPHY_TOKENS,
+    spacing: SPACING,
     alphaMix,
     surfaceMix,
 };
