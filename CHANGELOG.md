@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Add `./start.sh remote` (`start.bat remote` on Windows) and `npm run start:remote` to new projects. This mode pulls
+  the branch from `origin`, then fetches it again each 5 seconds while the server runs. It fast-forwards only. It does
+  not change local commits or uncommitted changes.
+
 ## [6.1.2] - 2026-10-15
 
 ### Changed

@@ -123,6 +123,7 @@ if (fs.existsSync(customTemplateDir)) {
             path.join(targetPath, "certs/generate-cert.sh"),
             path.join(targetPath, "start.sh"),
             path.join(targetPath, "build.sh"),
+            path.join(targetPath, "scripts/remote-sync.sh"),
         ];
         for (const exe of executables) {
             if (fs.existsSync(exe)) {
@@ -169,6 +170,7 @@ if (fs.existsSync(pkgPath)) {
         pkg.scripts = pkg.scripts || {};
         pkg.scripts["cert:gen"] = "bash ./certs/generate-cert.sh";
         pkg.scripts["verify:styles"] = "python3 scripts/verify_zero_cosmetic_sx.py";
+        pkg.scripts["start:remote"] = "bash ./start.sh remote";
         pkg.scripts["skill:add"] =
             "npx --yes skills add geosynk-lab/vertigis-sdk-skills --skill vertigis-workflow-sdk-skill -y";
         pkg.scripts["skills:add"] = "npx --yes skills add geosynk-lab/vertigis-sdk-skills -y";

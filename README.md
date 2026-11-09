@@ -140,6 +140,7 @@ my-activity-pack/
 ## Available Scripts (in Scaffolded Project)
 
 - **`./start.sh` (or `start.bat`)**: Kills stale port 5000 processes, generates SSL certificates if missing, and runs `npm start`.
+- **`./start.sh remote [branch] [seconds]`** (or `start.bat remote [branch]`, or `npm run start:remote`): Pulls `origin/<branch>` first, then fetches it again each 5 seconds (default) while the dev server runs. Fast-forward only: local commits and uncommitted changes are never overwritten. When `package.json` or a lockfile changes, it tells you to run `npm install`.
 - **`npm start`**: Runs the project in development mode with hot reloading on `https://localhost:5000/main.js`.
 - **`npm run build`** (or `./build.sh`): Generates an optimized production bundle in `build/`.
 - **`npm run cert:gen`**: Regenerates development SSL certificates in `certs/`.
